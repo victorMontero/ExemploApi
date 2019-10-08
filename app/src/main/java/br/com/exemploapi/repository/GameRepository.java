@@ -1,0 +1,39 @@
+package br.com.exemploapi.repository;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import br.com.exemploapi.model.Game;
+import br.com.exemploapi.service.RetrofitService;
+import io.reactivex.Observable;
+
+public class GameRepository {
+
+    // repository SEMPRE devolve RX
+
+    private RetrofitService retrofitService = new RetrofitService();
+    private static final String API_KEY = "cd082d3569e02515658088a4f8aa64df053d3ed8";
+    private static final String FORMAT = "json";
+    private static final String SORT = "id:desc";
+
+    // mock pra teste
+//    public Observable<List<Game>> getGameList() {
+////        return Observable.create(emitter -> {
+////            List<Game> gameList = new ArrayList<>();
+////            Game game  = new Game();
+////            game.setTitulo("God of War 4");
+////            game.setDescricao("Game of the Year 2018");
+////
+////            gameList.add(game);
+////
+////            emitter.onNext(gameList);
+////            emitter.onComplete();
+////        });
+////    }
+
+    public Observable<List<Game>> getGameListApi(int limit, int offset){
+        return retrofitService.getGamesApi()
+                .getGames(API_KEY, FORMAT, SORT, limit, offset)
+                .map(gameResponse -> gameResponse.getResults());
+    }
+}
